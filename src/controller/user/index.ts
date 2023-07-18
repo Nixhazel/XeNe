@@ -28,7 +28,7 @@ export const createUser = async (req: Request, res: Response) => {
 				.send({ message: "User already exists", success: false });
 		}
 
-		const token = jwt.sign({ email: email }, secret, { expiresIn: "1d" });
+		// const token = jwt.sign({ email: email }, secret, { expiresIn: "1d" });
 		const salt = await bcrypt.genSaltSync(saltRounds);
 		const hashPassword = await bcrypt.hashSync(password, salt);
 
@@ -37,16 +37,18 @@ export const createUser = async (req: Request, res: Response) => {
 			email,
 			password: hashPassword,
 			isVerified: false,
+			oTp: Math.floor(Math.random() * (9 - 0 + 1)) + 0,
 			// isAdmin: false,
 		};
 		const newuser = new User(newUserData);
-          await newuser.save();
-          
-          return res.status(201).send({
-						status: "success",
-						path: req.url,
-						message: `New user with email - ${newuser.email} added successfully`,
-						data: newuser,
-					});
+		await newuser.save();
+
+		return res.status(201).send({
+			status: "success",
+			success: true,
+			path: req.url,
+			message: `New user with email - ${newuser.email} added successfully`,
+			data: newuser,
+		});
 	} catch (error) {}
 };
