@@ -32,3 +32,21 @@ export const signupUserZod = z.object({
 	// 	invalid_type_error: "That's not a date!"
 	// })
 });
+
+export const loginZod = z.object({
+	userNameEmail:z.union([z
+		.string({
+			required_error: "User Name is required",
+		})
+		.min(3, {
+			message: "User user name must be 3 or more characters long",
+		}), z.string({ required_error: "Email is required" }).email()]),
+
+	password: z
+		.string({
+			required_error: "Password is required",
+		})
+		.min(8, { message: "Password must be 8 or more characters long" }),
+});
+
+

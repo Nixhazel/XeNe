@@ -23,7 +23,10 @@ const env = load({
 	MONGO_URL: String,
 	JWT_SECRET: String,
 	SALT_ROUNDS: Number,
-	OTP_LENGTH: Number,
+  OTP_LENGTH: Number,
+  USEREMAIL: String,
+  PASS: String,
+  SERVICE: String
 	// CLOUDINARY_API_KEY: String,
 	// CLOUDINARY_API_SECRET: String
 });
