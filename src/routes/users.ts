@@ -1,9 +1,10 @@
 import express from "express";
+import { createUser, logIn, verifyUserOtp } from '../controller/user';
 const router = express.Router();
 
 /* GET users listing. */
-router.get('/', (req, res, next) => {
-  res.send('respond with a resource');
-});
+router.post('/signup', createUser);
+router.post("/verifyUserOtp", verifyUserOtp);
+router.post("/logIn", logIn);
 
 export default router;

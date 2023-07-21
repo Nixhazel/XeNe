@@ -21,8 +21,12 @@ const app = express();
 // DotEnv variable types
 const env = load({
 	MONGO_URL: String,
-	// JWT_SECRET: String,
-	// SALT_ROUNDS: Number,
+	JWT_SECRET: String,
+	SALT_ROUNDS: Number,
+  OTP_LENGTH: Number,
+  USEREMAIL: String,
+  PASS: String,
+  SERVICE: String
 	// CLOUDINARY_API_KEY: String,
 	// CLOUDINARY_API_SECRET: String
 });
@@ -32,7 +36,7 @@ const url = process.env.MONGO_URL as string;
 // console.log('mongo string', url)
 
 assert.ok(env.MONGO_URL === process.env.MONGO_URL);
-// assert.ok(env.JWT_SECRET === process.env.JWT_SECRET);
+assert.ok(env.JWT_SECRET === process.env.JWT_SECRET);
 // assert.ok(env.CLOUDINARY_API_KEY === process.env.CLOUDINARY_API_KEY);
 // assert.ok(env.CLOUDINARY_API_SECRET === process.env.CLOUDINARY_API_SECRET);
 
