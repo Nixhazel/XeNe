@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import otpGenerator from "otp-generator";
 import User from "../../models/DBmodels/userModel";
-import { loginZod, signupUserZod } from "../../models/zod";
+import { loginZod, signupUserZod, updateProfileZod } from "../../models/zod";
 import sendMail from "../../utills/config/email.config";
 
 const saltRounds = parseInt(process.env.SALT_ROUNDS || "");
@@ -178,7 +178,10 @@ export const logIn = async (req: Request, res: Response) => {
 			});
 		}
 
-		const token = jwt.sign({userData: user }, secret);
+		const token = jwt.sign(
+			{ _id: user._id, email: user.email, isverified: user.isVerified },
+			secret
+		);
 
 		return res.status(200).send({
 			status: "success",
@@ -189,6 +192,70 @@ export const logIn = async (req: Request, res: Response) => {
 		});
 
 	} catch (error) {
-		
+		res.status(500).send({
+			status: "error",
+			error: error,
+			path: req.url,
+			message: "Something went wrong Loging in",
+			success: false,
+		});
 	}
 }
+
+export const completeProfile = async (req: Request, res: Response) => {
+	const error: any = updateProfileZod.safeParse(req.body);
+	if (error.success === false) {
+		return res.status(400).send({
+			success: false,
+			path: req.url,
+			message: error.error.issues[0].message,
+		});
+	}
+
+	try {
+		const { firstName, lastName, phone, dateOfBirth } = req.body
+		const userId = req.user; 
+
+		const existingUser = await User.findOne({
+			_id: userId,
+		});
+
+		if (!existingUser) {
+			return res
+				.status(404)
+				.send({ message: "User not found", success: false, path: req.url });
+		}
+
+		if (!existingUser.isVerified) {
+			return res
+				.status(404)
+				.send({ message: "User has not verified their email", success: false, path: req.url });
+		}
+
+		const completeUserData = {
+			firstName: firstName,
+			lastName: lastName,
+			phone: phone,
+			dateOfBirth: dateOfBirth,
+		};
+
+		await User.findOneAndUpdate({ _id: userId }, completeUserData, {
+			new: true,
+		});
+
+		return res.status(202).send({
+			status: "success",
+			success: true,
+			message: "User Profile details has been updated",
+		});
+
+	} catch (error) {
+		res.status(500).send({
+			status: "error",
+			error: error,
+			path: req.url,
+			message: "Something went wrong completing profile details",
+			success: false,
+		});
+	}
+};
