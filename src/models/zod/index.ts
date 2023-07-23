@@ -6,7 +6,7 @@ export const signupUserZod = z.object({
 			required_error: "User Name is required",
 		})
 		.min(3, {
-			message: "User user name must be 3 or more characters long",
+			message: "User name must be 3 or more characters long",
 		}),
 
 	email: z.string({ required_error: "Email is required" }).email(),
@@ -49,4 +49,39 @@ export const loginZod = z.object({
 		.min(8, { message: "Password must be 8 or more characters long" }),
 });
 
+export const updateProfileZod = z.object({
+	firstName: z
+		.string({
+			required_error: "User First Name is required",
+		})
+		.min(3, {
+			message: "User First name must be 3 or more characters long",
+		}),
+
+	lastName: z
+		.string({
+			required_error: "User Last Name is required",
+		})
+		.min(3, {
+			message: "User Last name must be 3 or more characters long",
+		}),
+
+	// gender: z.string({
+	// 	required_error: "User gender is required",
+	// }),
+	// 	.min(3, {
+	// 		message: 'User Last Name name must be 3 or more characters long'
+	// 	}),
+
+	phone: z
+		.string({
+			required_error: "User Phone Number is required",
+		})
+		.min(6, { message: "User mobile number must be 6 or more figures long" }),
+
+	dateOfBirth: z.string({
+		required_error: "Please select a date",
+		invalid_type_error: "That's not a date!",
+	}),
+});
 
